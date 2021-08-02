@@ -1,0 +1,172 @@
+<!-- Modify html from http://www.jsfuck.com/ -->
+<html>
+<head>
+    <title>PHPFun - Using only six different characters to write and execute PHP</title>
+    <meta name="description"
+        content="Using only 6 different characters to write and execute PHP">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script src="brython.min.js"></script>
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        body,
+        * {
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4em;
+        }
+
+        h1 {
+            font-size: 2em;
+            position: absolute;
+            top: 70px;
+            font-weight: normal;
+            left: 140px;
+        }
+
+        h2 {
+            width: 90px;
+            text-align: right;
+            padding: 50px 5px 5px;
+            background: #84C1FF;
+            color: #323230;
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 1em;
+        }
+
+        h3 {
+            font-weight: bold;
+        }
+
+        p,
+        li,
+        textarea,
+        .actions {
+            width: 100%;
+            max-width: 780px;
+        }
+
+        textarea {
+            display: block;
+            height: 400px;
+            margin: 1em 0;
+        }
+
+        ul.pre li {
+            white-space: pre;
+        }
+
+        .checkbox {
+            display: inline-block;
+        }
+
+        .actions button {
+            float: right;
+        }
+
+        .actions {
+            clear: both;
+        }
+    </style>
+</head>
+
+<body onload="brython()">
+    <h1>PHPFun</h1>
+
+    <h2>[]^<br>().</h2>
+
+    <p>Using only 6 different characters to write and execute PHP <br>
+        (Only support PHP 7+ currently)</p>
+
+    <p>Use the form below to convert your own script. Uncheck "use create_function" and "use assert" to
+        get back a plain string.</p>
+
+    <input id="input" type="text" value="phpinfo();" />
+    <button id="encode" type="text">Encode</button>
+
+    <div class="checkbox">
+        <input id="use_create_function" type="checkbox"/>
+        <label for="use_create_function">use create_function</label>
+    </div>
+
+    <div class="checkbox">
+        <input id="use_assert" type="checkbox"/>
+        <label for="use_assert">use assert (only support PHP < 7.1)</label>
+    </div>
+
+    <textarea id="output"></textarea>
+    <div class="actions">
+        <span id="stats">…</span>
+        <button id="copy" type="text">Copy text</button>
+        <!-- <a id="copy" href="#">Copy This</a> -->
+    </div>
+
+    <h3>Link</h3>
+    <ul>
+        <li>Test your encoded code at <a href="https://repl.it/languages/php">repl.it</a> or <a
+            href="http://3v4l.org/">3v4l.org</a>.</li>
+    </ul>
+
+    <h3>Alternatives</h3>
+    <ul>
+        <li><a href="https://splitline.github.io/PHPFuck/">PHPFuck</a> (7 chars)</li>
+    </ul>
+
+    <h3>How it work?</h3>
+
+    <ul class="pre">
+        <li>"ArrayArray" => [].[]</li>
+        <li>0 => []^[]</li>
+        <li>1 => []^[[]]</li>
+        <li>"A" => "ArrayArray"[[]]</li>
+        <li>"r" => "ArrayArray"[[[]]]</li>
+        <li>"3" => "A" ^ "r"</li>
+        <li>2 => "3" ^ [[]]</li>
+        <li>"y" => "0ArrayArray"[10] => ((0)."ArrayArray")[(1).(0)]</li>
+        <li>"8" => "A" ^ "y"</li>
+        <li>4 => "8" ^ [] ^ ((1).(2))</li>
+        <li>5 => 4 ^ 1</li>
+        <li>6 => 2 ^ 4</li>
+        <li>7 => 3 ^ 4</li>
+        <li>9 => "8" ^ 1</li>
+        <li>"p" => "A"^"1" => "ArrayArray"[[]] ^ (1).[]</li>
+        <li>"🐱" => IntlChar::chr(0x1f431) => ["IntlChar", "chr"](0x1f431)</li>
+        <li>["cat", "meow"] => "str_getcsv"("cat,meow")</li>
+        <li>eval(PAYLOAD) => "create_function"("", PAYLOAD)() => "create_function"(...str_getcsv(",PAYLOAD"))()</li>
+    </ul>
+
+    <p>View source code, full char mapping, and CLI tool on <a href="https://github.com/lebr0nli/PHPFun">GitHub</a></p>
+
+    <script type='text/python' src="phpfun.py"></script>
+    <script type='text/python'>
+        from browser import document, alert, console
+        from phpfun import PHPFun
+        phpfun = PHPFun()
+
+        @document["encode"].bind("click")
+        def encode(ev):
+            code = document["input"].value
+            if document["use_create_function"].checked:
+                encoded = phpfun.encode(code, "create_function")
+            elif document["use_assert"].checked:
+                encoded = phpfun.encode(code, "assert")
+            else:
+                encoded = phpfun.encode(code)
+            assert (set(encoded) <= set('([.^])'))
+            document["stats"].innerText = f"{len(encoded)} chars";
+            document["output"].value = encoded
+        
+        @document["copy"].bind("click")
+        def copy_code(ev):
+            area = document["output"]
+            area.focus()
+            area.select()
+            document.execCommand("copy")
+    </script>
+</body>
+
+</html>
