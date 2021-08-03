@@ -2,7 +2,7 @@
 
 Inspired by [aemkei/jsfuck](http://github.com/aemkei/jsfuck) and based on [splitline/PHPFuck](https://github.com/splitline/PHPFuck)
 
-Using only 6 different characters to write and execute code.
+Using only 6 different characters to write and execute PHP.
 
 Only support PHP 7+ currently.
 
