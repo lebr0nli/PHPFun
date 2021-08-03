@@ -14,10 +14,10 @@ class PHPFun:
         self.char_mapping['y'] = f"(({nums[0]}).{arr_str})[({nums[1]}).({nums[0]})]"
         nums[8] = f"{self.char_mapping['A']}^{self.char_mapping['y']}"  # "A" ^ "y"
         nums[4] = f"{nums[8]}^[]^(({nums[1]}).({nums[2]}))"
-        nums[5] = f"{nums[4]}^{nums[1]}"
+        nums[5] = f"{nums[4]}^[[]]"
         nums[6] = f"{nums[2]}^({nums[4]})"
         nums[7] = f"{nums[3]}^({nums[4]})"
-        nums[9] = f"{nums[8]}^{nums[1]}"
+        nums[9] = f"{nums[8]}^[[]]"
 
         self.nums = nums  # Note: 3 and 8 are string
         # using `Aray0123456789` & xor to generate printable ascii char
